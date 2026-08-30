@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>活动码提交</title>
+<style>
+:root{--g:#22c55e;--gd:#16a34a;--gl:#f0fdf4;--r:#ef4444;--gr:#64748b;--b:#e2e8f0;--bg:linear-gradient(135deg,#f0fdf4,#ecfeff 50%,#f8fafc);--card:#fff;--txt:#0f172a;--txt2:#1e293b;--txt3:#475569;--input-bg:#fff;--shadow:0 4px 24px rgba(0,0,0,.06)}
+@media(prefers-color-scheme:dark){:root{--bg:linear-gradient(135deg,#0a1a12,#0c1f2a 50%,#111827);--card:#1e293b;--txt:#f1f5f9;--txt2:#e2e8f0;--txt3:#94a3b8;--input-bg:#0f172a;--b:#334155;--shadow:0 4px 24px rgba(0,0,0,.3);--gl:#052e16}}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,sans-serif;background:var(--bg);min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+.c{background:var(--card);border-radius:20px;box-shadow:var(--shadow);width:100%;max-width:440px;padding:28px 20px}
+@media(min-width:768px){.c{padding:36px 32px}}
+.h{text-align:center;margin-bottom:24px}.h h1{font-size:clamp(20px,5vw,24px);color:var(--txt);font-weight:700;line-height:1.3}.h p{font-size:clamp(12px,3.5vw,14px);color:var(--gr);margin-top:6px}
+.h .b{display:inline-block;margin-top:8px;font-size:clamp(10px,3vw,11px);color:var(--gd);background:var(--gl);border:1px solid #bbf7d0;border-radius:999px;padding:3px 12px}
+.ig{display:flex;gap:10px;margin-bottom:14px}
+.ig input{flex:1;height:clamp(46px,12vw,52px);border:2px solid #86efac;border-radius:14px;font-size:clamp(16px,5vw,20px);font-weight:600;letter-spacing:.04em;padding:0 14px;outline:0;color:var(--txt2);font-variant-numeric:tabular-nums;background:var(--input-bg)}
+.ig input::placeholder{color:#94a3b8;font-weight:500}
+.ig input:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(34,197,94,.15)}
+.bs{height:clamp(46px,12vw,52px);min-width:clamp(80px,22vw,110px);border:0;border-radius:14px;background:var(--g);color:#fff;font-size:clamp(14px,4vw,17px);font-weight:600;cursor:pointer;white-space:nowrap;padding:0 16px;transition:background .15s,transform .1s}
+.bs:hover{background:var(--gd)}.bs:active{transform:scale(.97)}.bs:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.ag{display:flex;align-items:flex-start;gap:8px;margin-bottom:18px;font-size:clamp(11px,3vw,12px);color:var(--gr);line-height:1.5}
+.ag input{width:16px;height:16px;margin-top:2px;accent-color:var(--g);flex-shrink:0;cursor:pointer}
+.ag a{color:var(--gd);text-decoration:underline}
+.st{text-align:center;font-size:clamp(12px,3.5vw,14px);min-height:22px;margin-top:4px;word-break:break-all}
+.st.ok{color:var(--gd)}.st.er{color:var(--r)}.st.in{color:var(--gr)}
+.hs{margin-top:20px;border-top:1px solid var(--b);padding-top:14px}
+.hs h3{font-size:clamp(12px,3.5vw,13px);color:var(--gr);font-weight:600;margin-bottom:10px}
+.hl{list-style:none}
+.hi{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:10px;margin-bottom:6px;font-size:clamp(12px,3.5vw,13px);gap:8px}
+.hi.ok{background:var(--gl);color:#15803d}.hi.er{background:#fef2f2;color:#b91c1c}
+.hi .cd{font-weight:700;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;flex-shrink:0}.hi .mg{font-size:clamp(10px,3vw,11px);opacity:.8;text-align:right;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(min-width:1024px){.c{max-width:480px;padding:40px 36px}.h h1{font-size:26px}.ig input{height:54px;font-size:20px}.bs{height:54px;min-width:120px;font-size:17px}}
+</style>
+</head>
+<body>
+<div class="c" id="app" style="opacity:0;transition:opacity .3s">
+<div class="h"><h1>🎯 活动码提交</h1><p>输入活动分享码，快速完成提交</p><span class="b">AI 智能辅助</span></div>
+<div class="ig">
+<input type="tel" id="ci" maxlength="9" pattern="[0-9]*" placeholder="输入 8~9 位活动码" autocomplete="off" inputmode="numeric">
+<button class="bs" id="sb" disabled>提交</button>
+</div>
+<label class="ag"><input type="checkbox" id="ck"><span>我已阅读并同意<a href="#" onclick="return false">使用协议</a>，确认所提交内容合法合规</span></label>
+<div class="st" id="st"></div>
+<div class="hs" id="hx" style="display:none"><h3>📋 提交记录</h3><ul class="hl" id="hl"></ul></div>
+</div>
+<script>
+(function(){
+"use strict";
+
+// ═══ 代理地址（改为你的 Vercel 地址）═══
+// 部署 Vercel 后，把下面改成你的域名，例如：https://your-app.vercel.app/api/proxy
+var PX=atob('L2FwaS9wcm94eQ==');  // /api/proxy
+
+var VER="v3.5.3",BUILD="3.5.3+20260811.0142";
+var pgTk=null,passTk=null;
+var doing=false,hist=[];
+try{hist=JSON.parse(localStorage.getItem("ac_hist")||"[]")}catch(e){}
+
+var $i=document.getElementById("ci"),$s=document.getElementById("sb"),$k=document.getElementById("ck");
+var $st=document.getElementById("st"),$hx=document.getElementById("hx"),$hl=document.getElementById("hl");
+var $app=document.getElementById("app");
+
+function sSt(t,c){$st.textContent=t;$st.className="st"+(c?" "+c:"")}
+function uBtn(){$s.disabled=!$i.value.trim()||!$k.checked||doing}
+
+function savePT(){try{if(passTk){sessionStorage.setItem("ac_pt",passTk);localStorage.setItem("ac_pt",passTk)}else{sessionStorage.removeItem("ac_pt");localStorage.removeItem("ac_pt")}}catch(e){}}
+function loadPT(){try{passTk=sessionStorage.getItem("ac_pt")||localStorage.getItem("ac_pt")||null}catch(e){}}
+loadPT();
+
+// 通过 Vercel 代理请求后端
+function api(realPath,body,extraH){
+  var h={"Content-Type":"application/json","X-Action":btoa(realPath)};
+  if(pgTk)h["X-CopyGo-Page-Token"]=pgTk;
+  var _ah=atob('WC1Db3B5R28tUGRkLVB1Ymxpc2gtUGFzcw==');
+  if(passTk)h[_ah]=passTk;
+  h["X-Frontend-Version"]=VER;h["X-Frontend-Build"]=BUILD;h["X-Client-Type"]="H5";
+  if(extraH)Object.assign(h,extraH);
+  return fetch(PX,{method:"POST",headers:h,body:JSON.stringify(body||{})}).then(function(r){
+    if(!r.ok)throw new Error("HTTP "+r.status);return r.json()
+  })
+}
+
+function handleSubmit(){
+  var code=$i.value.trim();
+  if(!code||!$k.checked||doing)return;
+  if(!/^\d{8,9}$/.test(code)){sSt("活动码应为 8~9 位纯数字","er");return}
+  if(hist.some(function(h){return h.code===code&&h.ok})){sSt("该码已提交成功过","er");return}
+  doing=true;uBtn();sSt("正在提交...","in");
+
+  // 1. 获取 page-token
+  api("/int/api/web-security/page-token",{}).then(function(tk){
+    if(!tk.data||!tk.data.token)throw new Error("获取凭证失败");
+    pgTk=tk.data.token;
+
+    // 2. 尝试直接提交
+    return api(atob('L2ludC9hcGkvcGRkLWhlbHA=/add'),{number:code,honeypot:""});
+  }).then(function(sub){
+    if(sub.code!==4032){handleResult(code,sub);return}
+
+    // 3. 需要验证码
+    sSt("需要验证码...","in");
+    return api(atob('L2ludC9hcGkvcGRkLWhlbHA=/anonymous-publish/captcha/challenge'),{}).then(function(cap){
+      if(!cap.data||!cap.data.imageDataUrl)throw new Error("获取验证码失败");
+      var digits=cap.data.digits||4;
+      var answer=prompt("请输入验证码（"+digits+"位数字）：");
+      if(!answer)throw new Error("已取消");
+
+      return api(atob('L2ludC9hcGkvcGRkLWhlbHA=/anonymous-publish/captcha/verify'),{
+        challengeId:cap.data.challengeId,answer:answer
+      }).then(function(ver){
+        if(!ver.data||!ver.data.passToken)throw new Error("验证码校验失败");
+        passTk=ver.data.passToken;savePT();
+        return api(atob('L2ludC9hcGkvcGRkLWhlbHA=/add'),{number:code,honeypot:""});
+      }).then(function(sub2){handleResult(code,sub2)});
+    });
+  }).catch(function(e){sSt(e.message||"网络错误","er")}).finally(function(){doing=false;uBtn()})
+}
+
+function handleResult(code,d){
+  if(d.code===200||d.code===0){sSt("✓ 提交成功！","ok");addH(code,true,"成功");$i.value=""}
+  else if(d.code===429){sSt("操作太频繁","er");addH(code,false,"频率限制")}
+  else{sSt(d.message||"提交失败","er");addH(code,false,d.message||"失败")}
+}
+
+function addH(code,ok,msg){
+  hist.unshift({code:code,ok:ok,msg:msg,ts:Date.now()});hist=hist.slice(0,50);
+  try{localStorage.setItem("ac_hist",JSON.stringify(hist))}catch(e){}renderH()
+}
+function renderH(){
+  if(!hist.length){$hx.style.display="none";return}$hx.style.display="";
+  $hl.innerHTML=hist.slice(0,10).map(function(h){
+    var t=new Date(h.ts),tm=("0"+t.getHours()).slice(-2)+":"+("0"+t.getMinutes()).slice(-2);
+    return'<li class="hi '+(h.ok?"ok":"er")+'"><span class="cd">'+h.code+'</span><span class="mg">'+h.msg+" · "+tm+"</span></li>"
+  }).join("")
+}
+
+$i.addEventListener("input",uBtn);$k.addEventListener("change",uBtn);$s.addEventListener("click",handleSubmit);
+$i.addEventListener("keydown",function(e){if(e.key==="Enter"&&!$s.disabled)handleSubmit()});
+renderH();$app.style.opacity="1"
+})()
+</script>
+</body>
+</html>
