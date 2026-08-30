@@ -94,24 +94,24 @@ function handleSubmit(){
     pgTk=tk.data.token;
 
     // 2. 尝试直接提交
-    return api(atob('L2ludC9hcGkvcGRkLWhlbHA=/add'),{number:code,honeypot:""});
+    return api('/int/api/pdd-help/add',{number:code,honeypot:""});
   }).then(function(sub){
     if(sub.code!==4032){handleResult(code,sub);return}
 
     // 3. 需要验证码
     sSt("需要验证码...","in");
-    return api(atob('L2ludC9hcGkvcGRkLWhlbHA=/anonymous-publish/captcha/challenge'),{}).then(function(cap){
+    return api('/int/api/pdd-help/anonymous-publish/captcha/challenge',{}).then(function(cap){
       if(!cap.data||!cap.data.imageDataUrl)throw new Error("获取验证码失败");
       var digits=cap.data.digits||4;
       var answer=prompt("请输入验证码（"+digits+"位数字）：");
       if(!answer)throw new Error("已取消");
 
-      return api(atob('L2ludC9hcGkvcGRkLWhlbHA=/anonymous-publish/captcha/verify'),{
+      return api('/int/api/pdd-help/anonymous-publish/captcha/verify',{
         challengeId:cap.data.challengeId,answer:answer
       }).then(function(ver){
         if(!ver.data||!ver.data.passToken)throw new Error("验证码校验失败");
         passTk=ver.data.passToken;savePT();
-        return api(atob('L2ludC9hcGkvcGRkLWhlbHA=/add'),{number:code,honeypot:""});
+        return api('/int/api/pdd-help/add',{number:code,honeypot:""});
       }).then(function(sub2){handleResult(code,sub2)});
     });
   }).catch(function(e){sSt(e.message||"网络错误","er")}).finally(function(){doing=false;uBtn()})

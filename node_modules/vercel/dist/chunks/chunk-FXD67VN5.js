@@ -1,0 +1,467 @@
+import { createRequire as __createRequire } from 'node:module';
+import { fileURLToPath as __fileURLToPath } from 'node:url';
+import { dirname as __dirname_ } from 'node:path';
+const require = __createRequire(import.meta.url);
+const __filename = __fileURLToPath(import.meta.url);
+const __dirname = __dirname_(__filename);
+import {
+  require_dist
+} from "./chunk-XNFHNTS2.js";
+import {
+  forceOption,
+  formatOption,
+  jsonOption,
+  packageName,
+  projectOption,
+  require_lib,
+  yesOption
+} from "./chunk-Q2DGFCO7.js";
+import {
+  __toESM
+} from "./chunk-TZ2YI2VH.js";
+
+// src/util/env/env-target.ts
+var import_constants = __toESM(require_dist(), 1);
+var import_title = __toESM(require_lib(), 1);
+var envTargetChoices = import_constants.PROJECT_ENV_TARGET.map((t) => ({
+  name: (0, import_title.default)(t),
+  value: t
+}));
+function isValidEnvTarget(target) {
+  return typeof target === "undefined" || envTargetChoices.map((c) => c.value).includes(target);
+}
+function getEnvTargetPlaceholder() {
+  return `<${envTargetChoices.map((c) => c.value).join(" | ")}>`;
+}
+function parseEnvTargetArg(arg) {
+  return Array.from(
+    new Set(
+      arg.split(",").map((t) => t.trim()).filter(Boolean)
+    )
+  );
+}
+
+// src/commands/env/command.ts
+var targetPlaceholder = getEnvTargetPlaceholder();
+var listSubcommand = {
+  name: "list",
+  aliases: ["ls"],
+  description: "List all Environment Variables for a Project",
+  arguments: [
+    {
+      name: "environment",
+      required: false
+    },
+    {
+      name: "git-branch",
+      required: false
+    }
+  ],
+  options: [
+    formatOption,
+    jsonOption,
+    projectOption,
+    {
+      name: "guidance",
+      description: "Receive command suggestions once command is complete",
+      shorthand: null,
+      type: Boolean,
+      deprecated: false
+    }
+  ],
+  examples: []
+};
+var addSubcommand = {
+  name: "add",
+  aliases: [],
+  description: "Add an Environment Variable",
+  arguments: [
+    {
+      name: "name",
+      required: true
+    },
+    {
+      name: "environment",
+      required: false
+    }
+  ],
+  options: [
+    projectOption,
+    {
+      name: "git-branch",
+      description: "Set the Git branch for a Preview Environment Variable",
+      shorthand: null,
+      type: String,
+      argument: "NAME",
+      deprecated: false
+    },
+    {
+      name: "sensitive",
+      description: "Store the value as a Secret",
+      shorthand: null,
+      type: Boolean,
+      deprecated: false
+    },
+    {
+      name: "no-sensitive",
+      description: "Store the value as Config",
+      shorthand: null,
+      type: Boolean,
+      deprecated: false
+    },
+    {
+      name: "type",
+      description: "Set the Environment Variable type (`config` or `secret`)",
+      shorthand: null,
+      type: String,
+      argument: "TYPE",
+      deprecated: false
+    },
+    {
+      name: "visibility",
+      description: "Deprecated alias for `--type`",
+      shorthand: null,
+      type: String,
+      argument: "VISIBILITY",
+      deprecated: true
+    },
+    {
+      ...forceOption,
+      description: "Overwrite an existing variable for the same target",
+      shorthand: null
+    },
+    {
+      ...yesOption,
+      description: "Accept default choices when adding an Environment Variable"
+    },
+    {
+      name: "guidance",
+      description: "Show command suggestions after completion",
+      shorthand: null,
+      type: Boolean,
+      deprecated: false
+    },
+    {
+      name: "value",
+      description: "Set the variable value for non-interactive use; otherwise use stdin or the prompt",
+      shorthand: null,
+      type: String,
+      argument: "VALUE",
+      deprecated: false
+    }
+  ],
+  examples: [
+    {
+      name: "Add a new variable (prompts for value and Environments)",
+      value: [
+        `${packageName} env add <name>`,
+        `${packageName} env add API_TOKEN`
+      ]
+    },
+    {
+      name: "Add a new Environment Variable to a specific Environment",
+      value: [
+        `${packageName} env add <name> ${targetPlaceholder}`,
+        `${packageName} env add DB_PASS production`
+      ]
+    },
+    {
+      name: "Add one variable to multiple Environments (comma-separated)",
+      value: [
+        `${packageName} env add <name> <environment>[,<environment>]`,
+        `${packageName} env add API_URL production,preview,development`
+      ]
+    },
+    {
+      name: "Override an existing Environment Variable of same target (production, preview, deployment)",
+      value: `${packageName} env add API_TOKEN --force`
+    },
+    {
+      name: "Add a Config Environment Variable that remains readable later",
+      value: `${packageName} env add API_TOKEN --no-sensitive`
+    },
+    {
+      name: "Add a new Environment Variable for a specific Environment and Git Branch",
+      value: [
+        `${packageName} env add <name> ${targetPlaceholder} --git-branch <name>`,
+        `${packageName} env add DB_PASS preview --git-branch feat1`
+      ]
+    },
+    {
+      name: "Add a new Environment Variable from stdin",
+      value: [
+        `cat <file> | ${packageName} env add <name> ${targetPlaceholder}`,
+        `cat ~/.npmrc | ${packageName} env add NPM_RC preview`,
+        `${packageName} env add API_URL production < url.txt`
+      ]
+    },
+    {
+      name: "Add with --value for non-interactive use",
+      value: `${packageName} env add API_TOKEN production --value "<value>" --yes`
+    }
+  ]
+};
+var removeSubcommand = {
+  name: "remove",
+  aliases: ["rm"],
+  description: "Remove an Environment Variable (see examples below)",
+  arguments: [
+    {
+      name: "name",
+      required: true
+    },
+    {
+      name: "environment",
+      required: false
+    }
+  ],
+  options: [
+    projectOption,
+    {
+      ...yesOption,
+      description: "Skip the confirmation prompt when removing an Environment Variable"
+    }
+  ],
+  examples: [
+    {
+      name: "Remove a variable from multiple Environments",
+      value: [
+        `${packageName} env rm <name>`,
+        `${packageName} env rm API_TOKEN`
+      ]
+    },
+    {
+      name: "Remove a variable from a specific Environment",
+      value: [
+        `${packageName} env rm <name> ${targetPlaceholder}`,
+        `${packageName} env rm NPM_RC preview`
+      ]
+    },
+    {
+      name: "Remove a variable from a specific Environment and Git Branch",
+      value: [
+        `${packageName} env rm <name> ${targetPlaceholder} <gitbranch>`,
+        `${packageName} env rm NPM_RC preview feat1`
+      ]
+    }
+  ]
+};
+var pullSubcommand = {
+  name: "pull",
+  aliases: [],
+  description: "Pull all Development Environment Variables from the cloud and write to a file [.env.local]",
+  arguments: [
+    {
+      name: "filename",
+      required: false
+    }
+  ],
+  options: [
+    projectOption,
+    {
+      name: "environment",
+      description: "Set the Environment when pulling Environment Variables",
+      shorthand: null,
+      type: String,
+      argument: "TARGET",
+      deprecated: false
+    },
+    {
+      name: "git-branch",
+      description: "Specify the Git branch to pull specific Environment Variables for",
+      shorthand: null,
+      type: String,
+      argument: "NAME",
+      deprecated: false
+    },
+    {
+      name: "id",
+      description: "Pull environment variables for a specific deployment (e.g. dpl_xxx)",
+      shorthand: null,
+      type: String,
+      argument: "ID",
+      deprecated: false
+    },
+    {
+      ...yesOption,
+      description: "Skip the confirmation prompt when removing an environment variable"
+    }
+  ],
+  examples: [
+    {
+      name: "Pull all Development Environment Variables down from the cloud",
+      value: [
+        `${packageName} env pull <file>`,
+        `${packageName} env pull .env.development.local`
+      ]
+    },
+    {
+      name: "Pull environment variables for a specific deployment",
+      value: `${packageName} env pull --id dpl_xxx`
+    }
+  ]
+};
+var runSubcommand = {
+  name: "run",
+  aliases: [],
+  description: "Run a command with environment variables from the linked Vercel project",
+  arguments: [
+    {
+      name: "command",
+      required: true,
+      multiple: true
+    }
+  ],
+  options: [
+    projectOption,
+    {
+      name: "environment",
+      description: "Specify the environment to pull variables from (default: development)",
+      shorthand: "e",
+      type: String,
+      argument: "TARGET",
+      deprecated: false
+    },
+    {
+      name: "git-branch",
+      description: "Specify the Git branch to pull specific Environment Variables for",
+      shorthand: null,
+      type: String,
+      argument: "NAME",
+      deprecated: false
+    }
+  ],
+  examples: [
+    {
+      name: "Run Next.js dev server with development environment variables",
+      value: `${packageName} env run -- next dev`
+    },
+    {
+      name: "Run tests with preview environment variables for a specific branch",
+      value: `${packageName} env run -e preview --git-branch feature-x -- npm test`
+    }
+  ]
+};
+var updateSubcommand = {
+  name: "update",
+  aliases: [],
+  description: "Update the value of an existing Environment Variable (see examples below)",
+  arguments: [
+    {
+      name: "name",
+      required: true
+    },
+    {
+      name: "environment",
+      required: false
+    }
+  ],
+  options: [
+    projectOption,
+    {
+      name: "sensitive",
+      description: "Store the updated value as a Secret",
+      shorthand: null,
+      type: Boolean,
+      deprecated: false
+    },
+    {
+      name: "type",
+      description: "Set the Environment Variable type (`config` or `secret`)",
+      shorthand: null,
+      type: String,
+      argument: "TYPE",
+      deprecated: false
+    },
+    {
+      name: "visibility",
+      description: "Deprecated alias for `--type`",
+      shorthand: null,
+      type: String,
+      argument: "VISIBILITY",
+      deprecated: true
+    },
+    {
+      ...yesOption,
+      description: "Skip the confirmation prompt when updating an Environment Variable"
+    },
+    {
+      name: "value",
+      description: "New value for the variable (non-interactive). Otherwise use stdin or you will be prompted.",
+      shorthand: null,
+      type: String,
+      argument: "VALUE",
+      deprecated: false
+    }
+  ],
+  examples: [
+    {
+      name: "Update a variable in all Environments",
+      value: [
+        `${packageName} env update <name>`,
+        `${packageName} env update API_TOKEN`
+      ]
+    },
+    {
+      name: "Update a variable in a specific Environment",
+      value: [
+        `${packageName} env update <name> ${targetPlaceholder}`,
+        `${packageName} env update DB_PASS production`
+      ]
+    },
+    {
+      name: "Update a variable for a specific Environment and Git Branch",
+      value: [
+        `${packageName} env update <name> ${targetPlaceholder} <gitbranch>`,
+        `${packageName} env update NPM_RC preview feat1`
+      ]
+    },
+    {
+      name: "Update a variable from stdin",
+      value: [
+        `cat <file> | ${packageName} env update <name> ${targetPlaceholder}`,
+        `cat ~/.npmrc | ${packageName} env update NPM_RC preview`,
+        `${packageName} env update API_URL production < url.txt`
+      ]
+    }
+  ]
+};
+var envCommand = {
+  name: "env",
+  aliases: [],
+  description: "Interact with Environment Variables for a Project",
+  arguments: [],
+  subcommands: [
+    addSubcommand,
+    listSubcommand,
+    pullSubcommand,
+    removeSubcommand,
+    runSubcommand,
+    updateSubcommand
+  ],
+  options: [],
+  examples: [
+    {
+      name: "Run a command with Environment Variables from the linked Project",
+      value: `${packageName} env run -- <command>`
+    },
+    {
+      name: "Add one variable to multiple Environments",
+      value: `${packageName} env add API_URL production,preview,development`
+    }
+  ]
+};
+
+export {
+  envTargetChoices,
+  isValidEnvTarget,
+  getEnvTargetPlaceholder,
+  parseEnvTargetArg,
+  listSubcommand,
+  addSubcommand,
+  removeSubcommand,
+  pullSubcommand,
+  runSubcommand,
+  updateSubcommand,
+  envCommand
+};
