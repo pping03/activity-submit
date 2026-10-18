@@ -213,35 +213,56 @@ function handleSubmit(){
   if(hist.some(function(h){return h.code===code&&h.ok})){sSt("该码已提交成功过","er");return}
   doing=true;uBtn();sSt("正在提交...","in");
 
-  api("/int/api/web-security/page-token",{}).then(function(tk){
-    if(!tk.data||!tk.data.token)throw new Error("获取凭证失败");
-    pgTk=tk.data.token;
-    return api('/int/api/pdd-help/add',{number:code,honeypot:""});
-  }).then(function(sub){
-    if(sub.code!==4032){handleResult(code,sub);return}
+  var RETRY_MAX=5,RETRY_GAP=1500;
 
-    sSt("需要验证码...","in");
-    return api('/int/api/pdd-help/anonymous-publish/captcha/challenge',{}).then(function(cap){
-      if(!cap.data||!cap.data.imageDataUrl)throw new Error("获取验证码失败");
-      var digits=cap.data.digits||4;
-      var challengeId=cap.data.challengeId;
+  // 单次完整提交：取凭证 → 提交（触发验证码时完成验证后重提）
+  function once(){
+    $mo.dataset.cid="";  // 避免沿用上一次的验证码 challengeId
+    return api("/int/api/web-security/page-token",{}).then(function(tk){
+      if(!tk.data||!tk.data.token)throw new Error("获取凭证失败");
+      pgTk=tk.data.token;
+      return api('/int/api/pdd-help/add',{number:code,honeypot:""});
+    }).then(function(sub){
+      if(sub.code!==4032){handleResult(code,sub);return}
 
-      return showCaptcha(cap.data.imageDataUrl,digits).then(function(answer){
-        if(!answer)throw new Error("已取消");
+      sSt("需要验证码...","in");
+      return api('/int/api/pdd-help/anonymous-publish/captcha/challenge',{}).then(function(cap){
+        if(!cap.data||!cap.data.imageDataUrl)throw new Error("获取验证码失败");
+        var digits=cap.data.digits||4;
+        var challengeId=cap.data.challengeId;
 
-        // 如果用户点击图片刷新过，使用新的 challengeId
-        if($mo.dataset.cid)challengeId=$mo.dataset.cid;
+        return showCaptcha(cap.data.imageDataUrl,digits).then(function(answer){
+          if(!answer)throw new Error("已取消");
 
-        return api('/int/api/pdd-help/anonymous-publish/captcha/verify',{
-          challengeId:challengeId,answer:answer
-        });
-      }).then(function(ver){
-        if(!ver.data||!ver.data.passToken)throw new Error("验证码校验失败");
-        passTk=ver.data.passToken;savePT();
-        return api('/int/api/pdd-help/add',{number:code,honeypot:""});
-      }).then(function(sub2){handleResult(code,sub2)});
+          // 如果用户点击图片刷新过，使用新的 challengeId
+          if($mo.dataset.cid)challengeId=$mo.dataset.cid;
+
+          return api('/int/api/pdd-help/anonymous-publish/captcha/verify',{
+            challengeId:challengeId,answer:answer
+          });
+        }).then(function(ver){
+          if(!ver.data||!ver.data.passToken)throw new Error("验证码校验失败");
+          passTk=ver.data.passToken;savePT();
+          return api('/int/api/pdd-help/add',{number:code,honeypot:""});
+        }).then(function(sub2){handleResult(code,sub2)});
+      });
     });
-  }).catch(function(e){sSt(e.message||"网络错误","er")}).finally(function(){doing=false;uBtn()})
+  }
+
+  // 遇到 HTTP 500 自动重复提交；第5次仍失败则提示检查网络
+  function tryN(n){
+    if(n>0)sSt("正在重复提交 第"+n+"次","in");
+    return once().catch(function(e){
+      if(e.message!=="HTTP 500")throw e;
+      if(n<RETRY_MAX){
+        return new Promise(function(res){setTimeout(res,RETRY_GAP)}).then(function(){return tryN(n+1)});
+      }
+      addH(code,false,"网络异常");
+      throw new Error("第5次提交仍失败，请检查或重启网络后再试");
+    });
+  }
+
+  tryN(0).catch(function(e){sSt(e.message||"网络错误","er")}).finally(function(){doing=false;uBtn()})
 }
 
 function handleResult(code,d){
