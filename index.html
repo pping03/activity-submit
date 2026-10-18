@@ -49,6 +49,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Robot
 .mc .mb button{flex:1;height:44px;border:0;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;transition:background .15s}
 .mc .mb .bc{background:var(--b);color:var(--txt3)}.mc .mb .bc:hover{background:#cbd5e1}
 .mc .mb .bo{background:var(--g);color:#fff}.mc .mb .bo:hover{background:var(--gd)}
+
+/* 使用协议弹窗 */
+.tm{max-width:420px;text-align:left}
+.tm h3{text-align:center}
+.tt{max-height:52vh;overflow-y:auto;-webkit-overflow-scrolling:touch;font-size:13px;line-height:1.75;color:var(--txt3);background:var(--input-bg);border:1px solid var(--b);border-radius:12px;padding:14px 16px;margin-bottom:14px}
+.tt h4{font-size:14px;color:var(--txt2);margin:12px 0 4px}
+.tt h4:first-child{margin-top:0}
+.tt p{margin:4px 0}
+.tt ol{margin:4px 0 4px 20px}
+.tt .upd{text-align:right;color:var(--gr);font-size:12px;margin-top:10px}
 </style>
 </head>
 <body>
@@ -58,7 +68,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Robot
 <input type="tel" id="ci" maxlength="9" pattern="[0-9]*" placeholder="输入 8~9 位活动码" autocomplete="off" inputmode="numeric">
 <button class="bs" id="sb" disabled>提交</button>
 </div>
-<label class="ag"><input type="checkbox" id="ck"><span>我已阅读并同意<a href="#" onclick="return false">使用协议</a>，确认所提交内容合法合规</span></label>
+<label class="ag"><input type="checkbox" id="ck" checked><span>我已阅读并同意<a href="javascript:void(0)" id="agShow">使用协议</a>，确认所提交内容合法合规</span></label>
 <div class="st" id="st"></div>
 <div class="hs" id="hx" style="display:none"><h3>📋 提交记录</h3><ul class="hl" id="hl"></ul></div>
 <div class="ft"><a href="https://duo.999095.xyz" target="_blank" rel="noopener">🍎 查苹果库存</a></div>
@@ -74,6 +84,49 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Robot
 <button class="bc" id="capCancel">取消</button>
 <button class="bo" id="capOk">确认</button>
 </div>
+</div>
+</div>
+
+<!-- 使用协议弹窗 -->
+<div class="mo" id="tmo">
+<div class="mc tm">
+<h3>📄 使用协议</h3>
+<div class="tt">
+<h4>一、服务内容</h4>
+<p>1. 本页面（以下简称"本服务"）为用户提供活动分享码的提交辅助工具，帮助用户将活动码提交至对应的活动平台。</p>
+<p>2. 本服务仅为技术辅助工具，不保证每次提交均成功；活动码是否有效、奖励是否发放，以活动平台的实际规则与判定为准。</p>
+<h4>二、用户承诺</h4>
+<ol>
+<li>您保证所提交的活动码为您本人合法获得，未盗用、冒用他人的活动码；</li>
+<li>您确认提交行为出于自愿，不存在欺诈、作弊或违反活动平台规则的情形；</li>
+<li>您不得利用本服务进行批量刷码、脚本攻击、恶意占用平台资源等滥用行为；</li>
+<li>您提交的 8～9 位活动码应为真实有效的数字组合，不得提交虚假、伪造的内容。</li>
+</ol>
+<h4>三、使用规范</h4>
+<ol>
+<li>请勿频繁重复提交，系统可能对异常高频操作进行限制；</li>
+<li>提交前请仔细核对活动码，提交成功后无法撤回；</li>
+<li>如触发平台验证码，请按提示完成验证后继续提交。</li>
+</ol>
+<h4>四、隐私与数据</h4>
+<ol>
+<li>您的提交记录仅保存在本机浏览器（localStorage）中，不会上传至本服务自有服务器；</li>
+<li>提交过程中，活动码及必要的验证信息将经由代理转发至活动平台接口，以完成提交动作；</li>
+<li>我们不会将您的活动码用于提交之外的任何用途，也不会向第三方出售或共享。</li>
+</ol>
+<h4>五、免责声明</h4>
+<ol>
+<li>本服务按"现状"提供，不承诺 7×24 小时不间断可用；因网络波动、平台接口变更等原因导致的提交失败，本服务不承担责任；</li>
+<li>因您提供虚假活动码、违反平台规则或滥用本服务而产生的任何损失，由您自行承担；</li>
+<li>活动奖励的发放、到账时间等问题，请直接咨询对应的活动平台。</li>
+</ol>
+<h4>六、协议变更</h4>
+<p>我们可能适时更新本协议；更新后您继续使用本服务，即视为已接受变更后的协议内容。</p>
+<h4>七、联系我们</h4>
+<p>如对本协议有任何疑问，请通过本页面所属代码仓库的 Issue 与我们联系。</p>
+<p class="upd">更新日期：2026-10-18</p>
+</div>
+<div class="mb"><button class="bo" id="tOk" style="flex:1">我知道了</button></div>
 </div>
 </div>
 
@@ -95,6 +148,10 @@ var $app=document.getElementById("app");
 // 验证码弹窗元素
 var $mo=document.getElementById("mo"),$capImg=document.getElementById("capImg"),$capIn=document.getElementById("capIn");
 var $ciImg=document.getElementById("ciImg"),$capOk=document.getElementById("capOk"),$capCancel=document.getElementById("capCancel");
+var $tmo=document.getElementById("tmo"),$agShow=document.getElementById("agShow"),$tOk=document.getElementById("tOk");
+$agShow.addEventListener("click",function(){$tmo.classList.add("on")});
+$tOk.addEventListener("click",function(){$tmo.classList.remove("on")});
+$tmo.addEventListener("click",function(e){if(e.target===$tmo)$tmo.classList.remove("on")});
 
 function sSt(t,c){$st.textContent=t;$st.className="st"+(c?" "+c:"")}
 function uBtn(){$s.disabled=!$i.value.trim()||!$k.checked||doing}
@@ -194,12 +251,12 @@ function handleResult(code,d){
 }
 
 function addH(code,ok,msg){
-  hist.unshift({code:code,ok:ok,msg:msg,ts:Date.now()});hist=hist.slice(0,50);
+  hist.unshift({code:code,ok:ok,msg:msg,ts:Date.now()});hist=hist.slice(0,3);
   try{localStorage.setItem("ac_hist",JSON.stringify(hist))}catch(e){}renderH()
 }
 function renderH(){
   if(!hist.length){$hx.style.display="none";return}$hx.style.display="";
-  $hl.innerHTML=hist.slice(0,10).map(function(h){
+  $hl.innerHTML=hist.slice(0,3).map(function(h){
     var t=new Date(h.ts),tm=("0"+t.getHours()).slice(-2)+":"+("0"+t.getMinutes()).slice(-2);
     return'<li class="hi '+(h.ok?"ok":"er")+'"><span class="cd">'+h.code+'</span><span class="mg">'+h.msg+" · "+tm+"</span></li>"
   }).join("")
