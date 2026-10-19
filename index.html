@@ -130,13 +130,33 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Robot
 </div>
 </div>
 
+<!-- 更新说明弹窗 -->
+<div class="mo" id="cmo">
+<div class="mc tm">
+<h3>📢 更新说明</h3>
+<div class="tt">
+<p>尊敬的用户：</p>
+<p>感谢您使用活动码提交服务。本次更新内容如下：</p>
+<h4>一、关于活动码</h4>
+<p>本页面所称「活动码」，是指拼多多-百亿补贴频道「抽福袋」活动的分享码。提交成功后，系统将自动为您匹配组队，通常等待 5~10 秒即可组队成功，请耐心等待。</p>
+<h4>二、提交成功率说明</h4>
+<p>在活动低峰期，多次提交可有效提高组队成功概率。如提交失败，请稍后再次尝试。</p>
+<h4>三、自动重试（本次新增）</h4>
+<p>当提交接口返回异常时，系统将在后台自动重复提交（最多 5 次），提交状态将实时显示在页面中；若多次重试仍未成功，请检查网络连接或重启网络后重试。</p>
+<p>感谢您的理解与支持，祝您组队顺利！</p>
+<p class="upd">更新日期：2026-10-19</p>
+</div>
+<div class="mb"><button class="bo" id="cOk" style="flex:1">我已知晓</button></div>
+</div>
+</div>
+
 <script>
 (function(){
 "use strict";
 
 var PX=atob('L2FwaS9wcm94eQ==');  // /api/proxy
 
-var VER="v3.5.3",BUILD="3.5.3+20260811.0142";
+var VER="v3.5.4",BUILD="3.5.4+20261019.0800";
 var pgTk=null,passTk=null;
 var doing=false,hist=[];
 try{hist=JSON.parse(localStorage.getItem("ac_hist")||"[]")}catch(e){}
@@ -152,6 +172,10 @@ var $tmo=document.getElementById("tmo"),$agShow=document.getElementById("agShow"
 $agShow.addEventListener("click",function(){$tmo.classList.add("on")});
 $tOk.addEventListener("click",function(){$tmo.classList.remove("on")});
 $tmo.addEventListener("click",function(e){if(e.target===$tmo)$tmo.classList.remove("on")});
+
+// 更新说明弹窗：首次访问自动展示，点击"我已知晓"后不再提示
+var $cmo=document.getElementById("cmo"),$cOk=document.getElementById("cOk");
+$cOk.addEventListener("click",function(){try{localStorage.setItem("ac_cl_354","1")}catch(e){}$cmo.classList.remove("on")});
 
 function sSt(t,c){$st.textContent=t;$st.className="st"+(c?" "+c:"")}
 function uBtn(){$s.disabled=!$i.value.trim()||!$k.checked||doing}
@@ -286,6 +310,7 @@ function renderH(){
 $i.addEventListener("input",uBtn);$k.addEventListener("change",uBtn);$s.addEventListener("click",handleSubmit);
 $i.addEventListener("keydown",function(e){if(e.key==="Enter"&&!$s.disabled)handleSubmit()});
 renderH();$app.style.opacity="1"
+try{if(!localStorage.getItem("ac_cl_354"))$cmo.classList.add("on")}catch(e){}
 })()
 </script>
 </body>
