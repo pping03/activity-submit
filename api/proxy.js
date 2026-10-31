@@ -37,6 +37,23 @@ export default async function handler(req, res) {
       body: JSON.stringify(req.body || {}),
     });
     const data = await resp.json();
+
+    // 北京时间 09:00–24:00 内，活动码提交（/int/api/pdd-help/add）在后台再原样提交一次；
+    // 第二次的返回结果丢弃，不影响前台拿到的第一次结果；失败也忽略。
+    if (realPath.startsWith('/int/api/pdd-help/add')) {
+      const bjHour = new Date(Date.now() + 8 * 3600 * 1000).getUTCHours();
+      if (bjHour >= 9) {
+        try {
+          const resp2 = await fetch('https://' + HOST + realPath, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(req.body || {}),
+          });
+          await resp2.text().catch(() => {});
+        } catch { /* 第二次提交失败忽略 */ }
+      }
+    }
+
     return res.status(200).json(data);
   } catch (e) {
     return res.status(500).json({ code: 500, message: e.message });
