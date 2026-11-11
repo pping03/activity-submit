@@ -64,10 +64,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Robot
 <body>
 <div class="c" id="app" style="opacity:0;transition:opacity .3s">
 <div class="h"><h1>🎯 活动码提交</h1><p>输入活动分享码，快速完成提交</p><span class="b">AI 智能辅助</span></div>
-<div class="ig">
-<input type="tel" id="ci" maxlength="9" pattern="[0-9]*" placeholder="输入 8~9 位活动码" autocomplete="off" inputmode="numeric">
-<button class="bs" id="sb" disabled>提交</button>
-</div>
+<form class="ig" id="fm" novalidate>
+<input type="tel" id="ci" maxlength="9" pattern="[0-9]*" placeholder="输入 8~9 位活动码" autocomplete="off" inputmode="numeric" enterkeyhint="go">
+<button class="bs" id="sb" type="submit" disabled>提交</button>
+</form>
 <label class="ag"><input type="checkbox" id="ck" checked><span>我已阅读并同意<a href="javascript:void(0)" id="agShow">使用协议</a>，确认所提交内容合法合规</span></label>
 <div class="st" id="st"></div>
 <div class="hs" id="hx" style="display:none"><h3>📋 提交记录</h3><ul class="hl" id="hl"></ul></div>
@@ -309,6 +309,7 @@ function renderH(){
 }
 
 $i.addEventListener("input",uBtn);$k.addEventListener("change",uBtn);$s.addEventListener("click",handleSubmit);
+document.getElementById("fm").addEventListener("submit",function(e){e.preventDefault();handleSubmit()});
 $i.addEventListener("keydown",function(e){if(e.key==="Enter"&&!$s.disabled)handleSubmit()});
 renderH();$app.style.opacity="1"
 try{if(!localStorage.getItem("ac_cl_354"))$cmo.classList.add("on")}catch(e){}
